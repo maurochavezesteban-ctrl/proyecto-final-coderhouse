@@ -152,71 +152,56 @@
 
     </div>
 
-    <!-- Proceso y evidencia: SQL + Power BI -->
+    <!-- Proceso y evidencia: Dataset, Modelado y Consultas SQL -->
     <div class="mt-14 fade-up">
       <h2 class="text-xl md:text-2xl font-bold text-white">Proceso y evidencia</h2>
-      <p class="mt-1 text-sm text-gray-400">Capturas reales del desarrollo en SQL Server y del dashboard construido en Power BI.</p>
+      <p class="mt-1 text-sm text-gray-400">Capturas reales del dataset, el modelado de datos y las consultas SQL desarrolladas para este informe.</p>
       <div class="mt-4 h-px bg-white/10"></div>
 
-      <!-- Dashboard final destacado -->
+      <!-- 2. Descripción del Dataset -->
       <div class="mt-6 card rounded-xl p-5 md:p-6">
-        <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Entregable Final</p>
-        <h3 class="mt-1 text-lg font-bold text-white">Dashboard en Power BI</h3>
-        <p class="mt-1 text-sm text-gray-400 mb-4">KPI cards, evolución de ventas por año y ranking de compradores — el informe presentado al equipo de marketing.</p>
-        <div class="rounded-lg overflow-hidden border border-white/10 bg-white">
-          <img src="img/powerbi-dashboard-final.png" alt="Dashboard final en Power BI con KPIs, ventas por año y ventas por comprador" class="w-full h-auto block" />
-        </div>
+        <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Descripción del Dataset</p>
+        <h3 class="mt-1 text-lg font-bold text-white">Tabla Customers — fuente original en Excel</h3>
+        <p class="mt-1 text-sm text-gray-400">Hoja "Customers" del archivo retail antes de su exportación a CSV e importación a SQL Server.</p>
+        <img src="./dataset-excel.png" alt="Vista del dataset original de Customers en Excel" class="w-full max-w-3xl mx-auto rounded-lg shadow-md my-4 block" />
+        <p class="mt-1 text-sm text-gray-400">Detalle de columnas: Customer ID, Customer Name, Segment e id Location.</p>
+        <img src="./dataset-excel_1.png" alt="Detalle de columnas del dataset Customers en Excel" class="w-full max-w-3xl mx-auto rounded-lg shadow-md my-4 block" />
       </div>
 
-      <!-- Grilla de capturas del proceso -->
-      <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-
-        <div class="card rounded-xl p-5">
-          <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Modelado de Datos</p>
-          <h4 class="mt-1 text-base font-bold text-white">Modelo relacional en Power BI</h4>
-          <p class="mt-1 text-sm text-gray-400 mb-4">Relaciones entre Customers, Orders y OrderDetails.</p>
-          <div class="rounded-lg overflow-hidden border border-white/10 bg-white">
-            <img src="img/powerbi-modelo-relacional.png" alt="Modelo relacional en Power BI entre Customers, Orders y OrderDetails" class="w-full h-auto block" />
-          </div>
-        </div>
-
-        <div class="card rounded-xl p-5">
-          <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Dataset Original</p>
-          <h4 class="mt-1 text-base font-bold text-white">Tabla Customers (Excel)</h4>
-          <p class="mt-1 text-sm text-gray-400 mb-4">Fuente original antes de la importación a SQL Server.</p>
-          <div class="rounded-lg overflow-hidden border border-white/10 bg-white">
-            <img src="img/dataset-excel.png" alt="Vista del dataset original de Customers en Excel" class="w-full h-auto block" />
-          </div>
-        </div>
-
-        <div class="card rounded-xl p-5">
-          <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Verificación de Esquema</p>
-          <h4 class="mt-1 text-base font-bold text-white">Estructura de Customers en SQL Server</h4>
-          <p class="mt-1 text-sm text-gray-400 mb-4">Consulta sobre INFORMATION_SCHEMA.COLUMNS para validar tipos de datos.</p>
-          <div class="rounded-lg overflow-hidden border border-white/10 bg-white">
-            <img src="img/sql-estructura-customers.png" alt="Query de estructura de la tabla Customers en SQL Server" class="w-full h-auto block" />
-          </div>
-        </div>
-
-        <div class="card rounded-xl p-5">
-          <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Exploración Inicial</p>
-          <h4 class="mt-1 text-base font-bold text-white">Vista de la tabla Orders</h4>
-          <p class="mt-1 text-sm text-gray-400 mb-4">SELECT TOP 10 sobre Orders para revisar fechas y modos de envío.</p>
-          <div class="rounded-lg overflow-hidden border border-white/10 bg-white">
-            <img src="img/sql-orders-top10.png" alt="Query SELECT TOP 10 de la tabla Orders en SQL Server" class="w-full h-auto block" />
-          </div>
-        </div>
-
-        <div class="card rounded-xl p-5 md:col-span-2">
-          <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Consulta Principal (EDA)</p>
-          <h4 class="mt-1 text-base font-bold text-white">JOIN de Orders, OrderDetails y Customers — últimos 30 días</h4>
-          <p class="mt-1 text-sm text-gray-400 mb-4">Cliente, fecha de compra y total de venta, filtrado y ordenado por fecha descendente.</p>
-          <div class="rounded-lg overflow-hidden border border-white/10 bg-white max-w-xl">
-            <img src="img/sql-query-eda.png" alt="Query SQL con JOIN entre Orders, OrderDetails y Customers, con resultados de ventas" class="w-full h-auto block" />
-          </div>
-        </div>
-
+      <!-- 4. Modelado de datos -->
+      <div class="mt-6 card rounded-xl p-5 md:p-6">
+        <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Modelado de Datos</p>
+        <h3 class="mt-1 text-lg font-bold text-white">Modelo relacional en Power BI</h3>
+        <p class="mt-1 text-sm text-gray-400">Relaciones entre Customers, Orders y OrderDetails que sostienen el análisis integral de ventas.</p>
+        <img src="./powerbi-modelo-relacional.png" alt="Modelo relacional en Power BI entre Customers, Orders y OrderDetails" class="w-full max-w-3xl mx-auto rounded-lg shadow-md my-4 block" />
       </div>
+
+      <!-- 3. Preparación de datos / Estructura de tabla en SQL Server -->
+      <div class="mt-6 card rounded-xl p-5 md:p-6">
+        <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Preparación de Datos</p>
+        <h3 class="mt-1 text-lg font-bold text-white">Verificación de esquema — Tabla Customers en SQL Server</h3>
+        <p class="mt-1 text-sm text-gray-400">Consulta sobre INFORMATION_SCHEMA.COLUMNS para validar tipos de datos y nulabilidad.</p>
+        <img src="./sql-estructura-customers.png" alt="Query de estructura de la tabla Customers en SQL Server" class="w-full max-w-3xl mx-auto rounded-lg shadow-md my-4 block" />
+        <p class="mt-1 text-sm text-gray-400">Resultado: columnas Customer_ID, Customer_Name, Segment e id_Location, todas no nulas.</p>
+        <img src="./sql-estructura-customers_1.png" alt="Resultado de la estructura de columnas de la tabla Customers" class="w-full max-w-3xl mx-auto rounded-lg shadow-md my-4 block" />
+      </div>
+
+      <!-- Exploración inicial de Orders -->
+      <div class="mt-6 card rounded-xl p-5 md:p-6">
+        <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Exploración Inicial</p>
+        <h3 class="mt-1 text-lg font-bold text-white">Vista de la tabla Orders</h3>
+        <p class="mt-1 text-sm text-gray-400">SELECT TOP 10 sobre Orders para revisar fechas, modo de envío y cliente asociado.</p>
+        <img src="./sql-orders-top10.png" alt="Query SELECT TOP 10 de la tabla Orders en SQL Server" class="w-full max-w-3xl mx-auto rounded-lg shadow-md my-4 block" />
+      </div>
+
+      <!-- 5. Consulta SQL principal / 6. EDA -->
+      <div class="mt-6 card rounded-xl p-5 md:p-6">
+        <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Consulta SQL Principal · EDA</p>
+        <h3 class="mt-1 text-lg font-bold text-white">JOIN de Orders, OrderDetails y Customers — últimos 30 días</h3>
+        <p class="mt-1 text-sm text-gray-400">Cliente, fecha de compra y total de venta, filtrado por los últimos 30 días y ordenado por fecha descendente.</p>
+        <img src="./sql-query-eda.png" alt="Query SQL con JOIN entre Orders, OrderDetails y Customers, con resultados de ventas" class="w-full max-w-3xl mx-auto rounded-lg shadow-md my-4 block" />
+      </div>
+
     </div>
 
     <!-- Footer / nota -->

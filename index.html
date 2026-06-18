@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Performance de Ventas — Análisis de Ventas y Clientes con SQL y Power BI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root { --green: #4ade80; }
+  * { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+  html, body { background-color: #0b0f19; }
+  body { color: #ffffff; }
+  .card {
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .divider-v {
+    border-left: 1px solid rgba(255,255,255,0.08);
+  }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: #0b0f19; }
+  ::-webkit-scrollbar-thumb { background: #2a3142; border-radius: 8px; }
+  .fade-up { animation: fadeUp .6s ease-out both; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(8px);} to {opacity:1; transform: translateY(0);} }
+
+  /* Fallback explícito de contraste: garantiza legibilidad independientemente de si el CDN de Tailwind carga a tiempo */
+  .text-white   { color: #ffffff !important; }
+  .text-gray-300{ color: #d1d5db !important; }
+  .text-gray-400{ color: #9ca3af !important; }
+  .text-gray-500{ color: #9ca3af !important; } /* se sube a un gris más claro para asegurar contraste */
+  .text-green-glow { color: #4ade80 !important; }
+</style>
+</head>
+<body class="bg-[#0b0f19] text-white min-h-screen pb-24">
+
+  <div class="max-w-7xl mx-auto px-6 md:px-10 pt-12">
+
+    <!-- Tags superiores -->
+    <div class="flex items-center gap-3 fade-up">
+      <span class="px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-green-900/40 text-green-glow border border-green-800/40">
+        ANÁLISIS COMERCIAL
+      </span>
+      <span class="px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-gray-800/70 text-gray-300 border border-gray-700/50">
+        Completado
+      </span>
+    </div>
+
+    <!-- Título principal -->
+    <h1 class="mt-6 text-3xl md:text-5xl font-extrabold tracking-tight text-white fade-up">
+      Performance de Ventas — Análisis de Ventas y Clientes con SQL y Power BI
+    </h1>
+
+    <!-- Metadatos -->
+    <p class="mt-3 text-sm text-gray-400 fade-up">
+      Proyecto Final · Coderhouse — Análisis de Datos · Dataset Retail (Superstore) · SQL Server &amp; Power BI · Período analizado: 2015 – 2018
+    </p>
+
+    <!-- Párrafo introductorio -->
+    <p class="mt-6 text-base md:text-lg text-gray-300 leading-relaxed max-w-4xl fade-up">
+      Este análisis explora un conjunto de datos de ventas de tipo retail con el objetivo de identificar patrones de comportamiento de clientes,
+      la evolución temporal de las ventas y oportunidades de mejora en la toma de decisiones basada en datos. Se integraron las tablas
+      <span class="text-gray-300 font-medium">Customers</span>, <span class="text-gray-300 font-medium">Orders</span> y
+      <span class="text-gray-300 font-medium">OrderDetails</span> mediante SQL Server, y se construyó un dashboard interactivo en Power BI
+      para comunicar los hallazgos al equipo de marketing.
+    </p>
+
+    <!-- KPIs -->
+    <div class="mt-10 grid grid-cols-2 md:grid-cols-4 card rounded-xl overflow-hidden fade-up">
+      <div class="p-6 md:p-7">
+        <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Facturación Total</p>
+        <p class="mt-3 text-3xl md:text-4xl font-bold text-green-glow">$1.113,08 M</p>
+        <p class="mt-1 text-xs text-gray-400">2015 – 2018 acumulado</p>
+      </div>
+      <div class="p-6 md:p-7 divider-v">
+        <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Cantidad de Pedidos</p>
+        <p class="mt-3 text-3xl md:text-4xl font-bold text-white">4.922</p>
+        <p class="mt-1 text-xs text-gray-400">9.798 ítems vendidos</p>
+      </div>
+      <div class="p-6 md:p-7 divider-v">
+        <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Ticket Promedio</p>
+        <p class="mt-3 text-3xl md:text-4xl font-bold text-white">$226,14 K</p>
+        <p class="mt-1 text-xs text-gray-400">por pedido</p>
+      </div>
+      <div class="p-6 md:p-7 divider-v">
+        <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Clientes Únicos</p>
+        <p class="mt-3 text-3xl md:text-4xl font-bold text-white">793</p>
+        <p class="mt-1 text-xs text-gray-400">Top 10 = 14,7% de ventas</p>
+      </div>
+    </div>
+
+    <!-- Resumen ejecutivo -->
+    <div class="mt-14 fade-up">
+      <h2 class="text-xl md:text-2xl font-bold text-white">Resumen ejecutivo</h2>
+      <div class="mt-4 h-px bg-white/10"></div>
+      <p class="mt-5 text-gray-300 leading-relaxed max-w-4xl">
+        El volumen de ventas no se distribuye de manera uniforme entre los clientes: el
+        <span class="text-white font-semibold">top 3 de compradores</span>
+        (Emily Phan, Anna Gayman y Patrick O'Brill) concentra una porción significativa de los ingresos, en línea con el
+        principio de Pareto. Desde la perspectiva temporal, las ventas muestran un
+        <span class="text-green-glow font-semibold">crecimiento sostenido</span>
+        entre 2015 y 2018, con el salto más fuerte entre 2016 y 2017 (+39,6%), seguido de una desaceleración en 2018 (+6,8%)
+        que podría indicar maduración del mercado. El segmento <span class="text-white font-semibold">Consumer</span> lidera
+        con el 55% de las ventas, seguido por Corporate (29%) y Home Office (16%). Como próximo paso se recomienda aplicar
+        un modelo de segmentación <span class="text-white font-semibold">RFM</span> para diseñar campañas de retención y reactivación.
+      </p>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6 fade-up">
+
+      <!-- Ventas por año -->
+      <div class="card rounded-xl p-6">
+        <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Evolución Temporal</p>
+        <h3 class="mt-1 text-lg font-bold text-white">Ventas por Año</h3>
+        <p class="mt-1 text-sm text-gray-400">Crecimiento sostenido 2015–2018, con desaceleración en el último año.</p>
+        <div class="mt-5 h-72">
+          <canvas id="chartVentasAnio"></canvas>
+        </div>
+      </div>
+
+      <!-- Ventas por comprador -->
+      <div class="card rounded-xl p-6">
+        <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Clientes de Alto Valor</p>
+        <h3 class="mt-1 text-lg font-bold text-white">Ventas por Comprador (Top 8)</h3>
+        <p class="mt-1 text-sm text-gray-400">Anna Gayman lidera con $24,9 mill. en ventas acumuladas.</p>
+        <div class="mt-5 h-72">
+          <canvas id="chartVentasComprador"></canvas>
+        </div>
+      </div>
+
+      <!-- Segmentación por tipo de cliente -->
+      <div class="card rounded-xl p-6">
+        <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Mix de Negocio</p>
+        <h3 class="mt-1 text-lg font-bold text-white">Ventas por Segmento de Cliente</h3>
+        <p class="mt-1 text-sm text-gray-400">Consumer concentra más de la mitad de la facturación total.</p>
+        <div class="mt-5 h-72 flex items-center justify-center">
+          <canvas id="chartSegmento"></canvas>
+        </div>
+      </div>
+
+      <!-- Crecimiento YoY -->
+      <div class="card rounded-xl p-6">
+        <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Tasa de Crecimiento</p>
+        <h3 class="mt-1 text-lg font-bold text-white">Crecimiento Interanual (YoY)</h3>
+        <p class="mt-1 text-sm text-gray-400">El pico de crecimiento se dio entre 2016 y 2017 (+39,6%).</p>
+        <div class="mt-5 h-72">
+          <canvas id="chartYoY"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Proceso y evidencia: SQL + Power BI -->
+    <div class="mt-14 fade-up">
+      <h2 class="text-xl md:text-2xl font-bold text-white">Proceso y evidencia</h2>
+      <p class="mt-1 text-sm text-gray-400">Capturas reales del desarrollo en SQL Server y del dashboard construido en Power BI.</p>
+      <div class="mt-4 h-px bg-white/10"></div>
+
+      <!-- Dashboard final destacado -->
+      <div class="mt-6 card rounded-xl p-5 md:p-6">
+        <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Entregable Final</p>
+        <h3 class="mt-1 text-lg font-bold text-white">Dashboard en Power BI</h3>
+        <p class="mt-1 text-sm text-gray-400 mb-4">KPI cards, evolución de ventas por año y ranking de compradores — el informe presentado al equipo de marketing.</p>
+        <div class="rounded-lg overflow-hidden border border-white/10 bg-white">
+          <img src="img/powerbi-dashboard-final.png" alt="Dashboard final en Power BI con KPIs, ventas por año y ventas por comprador" class="w-full h-auto block" />
+        </div>
+      </div>
+
+      <!-- Grilla de capturas del proceso -->
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <div class="card rounded-xl p-5">
+          <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Modelado de Datos</p>
+          <h4 class="mt-1 text-base font-bold text-white">Modelo relacional en Power BI</h4>
+          <p class="mt-1 text-sm text-gray-400 mb-4">Relaciones entre Customers, Orders y OrderDetails.</p>
+          <div class="rounded-lg overflow-hidden border border-white/10 bg-white">
+            <img src="img/powerbi-modelo-relacional.png" alt="Modelo relacional en Power BI entre Customers, Orders y OrderDetails" class="w-full h-auto block" />
+          </div>
+        </div>
+
+        <div class="card rounded-xl p-5">
+          <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Dataset Original</p>
+          <h4 class="mt-1 text-base font-bold text-white">Tabla Customers (Excel)</h4>
+          <p class="mt-1 text-sm text-gray-400 mb-4">Fuente original antes de la importación a SQL Server.</p>
+          <div class="rounded-lg overflow-hidden border border-white/10 bg-white">
+            <img src="img/dataset-excel.png" alt="Vista del dataset original de Customers en Excel" class="w-full h-auto block" />
+          </div>
+        </div>
+
+        <div class="card rounded-xl p-5">
+          <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Verificación de Esquema</p>
+          <h4 class="mt-1 text-base font-bold text-white">Estructura de Customers en SQL Server</h4>
+          <p class="mt-1 text-sm text-gray-400 mb-4">Consulta sobre INFORMATION_SCHEMA.COLUMNS para validar tipos de datos.</p>
+          <div class="rounded-lg overflow-hidden border border-white/10 bg-white">
+            <img src="img/sql-estructura-customers.png" alt="Query de estructura de la tabla Customers en SQL Server" class="w-full h-auto block" />
+          </div>
+        </div>
+
+        <div class="card rounded-xl p-5">
+          <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Exploración Inicial</p>
+          <h4 class="mt-1 text-base font-bold text-white">Vista de la tabla Orders</h4>
+          <p class="mt-1 text-sm text-gray-400 mb-4">SELECT TOP 10 sobre Orders para revisar fechas y modos de envío.</p>
+          <div class="rounded-lg overflow-hidden border border-white/10 bg-white">
+            <img src="img/sql-orders-top10.png" alt="Query SELECT TOP 10 de la tabla Orders en SQL Server" class="w-full h-auto block" />
+          </div>
+        </div>
+
+        <div class="card rounded-xl p-5 md:col-span-2">
+          <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">Consulta Principal (EDA)</p>
+          <h4 class="mt-1 text-base font-bold text-white">JOIN de Orders, OrderDetails y Customers — últimos 30 días</h4>
+          <p class="mt-1 text-sm text-gray-400 mb-4">Cliente, fecha de compra y total de venta, filtrado y ordenado por fecha descendente.</p>
+          <div class="rounded-lg overflow-hidden border border-white/10 bg-white max-w-xl">
+            <img src="img/sql-query-eda.png" alt="Query SQL con JOIN entre Orders, OrderDetails y Customers, con resultados de ventas" class="w-full h-auto block" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer / nota -->
+    <div class="mt-14 pt-6 border-t border-white/10 fade-up">
+      <p class="text-xs text-gray-400">
+        Fuente: dataset retail (Superstore) procesado en SQL Server e integrado en Power BI · Proyecto Final — Coderhouse, Análisis de Datos.
+      </p>
+    </div>
+
+  </div>
+
+<script>
+  Chart.defaults.color = '#9ca3af';
+  Chart.defaults.font.family = "'Inter', sans-serif";
+  Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+
+  const green = '#4ade80';
+  const gridColor = 'rgba(255,255,255,0.06)';
+
+  // 1. Ventas por Año (línea)
+  new Chart(document.getElementById('chartVentasAnio'), {
+    type: 'line',
+    data: {
+      labels: ['2015', '2016', '2017', '2018'],
+      datasets: [{
+        label: 'Ventas Totales (mill.)',
+        data: [198.5, 235.2, 328.4, 350.9],
+        borderColor: green,
+        backgroundColor: 'rgba(74,222,128,0.12)',
+        fill: true,
+        tension: 0.35,
+        pointBackgroundColor: green,
+        pointBorderColor: '#0b0f19',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        borderWidth: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#111827',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          callbacks: { label: (ctx) => `$${ctx.parsed.y} mill.` }
+        }
+      },
+      scales: {
+        x: { grid: { color: gridColor } },
+        y: {
+          grid: { color: gridColor },
+          ticks: { callback: (v) => `$${v} M` }
+        }
+      }
+    }
+  });
+
+  // 2. Ventas por Comprador (barras horizontales)
+  new Chart(document.getElementById('chartVentasComprador'), {
+    type: 'bar',
+    data: {
+      labels: ['Anna Gayman', 'Craig Molinari', 'Amy Hunt', "Patrick O'Brill", 'Emily Phan', 'Tom Ashbrook', 'Harry Marie', 'Sean O\'Donnell'],
+      datasets: [{
+        label: 'Ventas (mill.)',
+        data: [24.9, 14.8, 13.7, 12.7, 11.8, 11.4, 10.8, 10.3],
+        backgroundColor: green,
+        borderRadius: 4,
+        barThickness: 16
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#111827',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          callbacks: { label: (ctx) => `$${ctx.parsed.x} mill.` }
+        }
+      },
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { callback: (v) => `$${v}M` } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+
+  // 3. Segmentación por tipo de cliente (doughnut)
+  new Chart(document.getElementById('chartSegmento'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Consumer (55%)', 'Corporate (29%)', 'Home Office (16%)'],
+      datasets: [{
+        data: [55, 29, 16],
+        backgroundColor: [green, '#22d3ee', '#64748b'],
+        borderColor: '#0b0f19',
+        borderWidth: 3,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { boxWidth: 10, padding: 16, color: '#d1d5db' }
+        },
+        tooltip: {
+          backgroundColor: '#111827',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1
+        }
+      }
+    }
+  });
+
+  // 4. Crecimiento YoY (barras verticales)
+  new Chart(document.getElementById('chartYoY'), {
+    type: 'bar',
+    data: {
+      labels: ['2015', '2016', '2017', '2018'],
+      datasets: [{
+        label: 'Crecimiento YoY',
+        data: [null, 18.5, 39.6, 6.8],
+        backgroundColor: (ctx) => {
+          const v = ctx.raw;
+          if (v === null) return 'rgba(255,255,255,0.08)';
+          return v === 39.6 ? green : 'rgba(74,222,128,0.45)';
+        },
+        borderRadius: 6,
+        barThickness: 40
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#111827',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          callbacks: {
+            label: (ctx) => ctx.raw === null ? 'Sin período previo' : `+${ctx.raw}%`
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { grid: { color: gridColor }, ticks: { callback: (v) => `${v}%` } }
+      }
+    }
+  });
+</script>
+</body>
+</html>
